@@ -1,0 +1,37 @@
+title: Room 2
+exits: { s: room1 }
+
+---
+
+You are standing in Room 2.
+
+---
+
+local door_locked = true
+
+on "unlock door"
+	check: -> door_locked
+	do: {
+		say "what you want to unlock the door with?"
+		disambiguate_present_object
+	}
+
+on "unlock door (with *)"
+	check: -> not door_locked
+	do: {
+		say "the door is already unlocked!"
+	}
+
+on "unlock door with key"
+	check: -> $actor carrying "gold key"
+	do: {
+		say "you unlock the door"
+		door_locked = false
+	}
+}
+
+on "south"
+	check: -> not door_locked
+	do: {
+		say "the door is locked!"
+	}
