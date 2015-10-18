@@ -1,3 +1,5 @@
+var util = require('util');
+
 function YES() { return true; }
 
 module.exports = function() {
@@ -29,7 +31,7 @@ module.exports = function() {
             pattern = pattern.split(/\s+/).map(function(word) {
                 if (word[0] === ':') {
                     return { type: 'class', className: word.substring(1) };
-                } else if (word[1] === '*') {
+                } else if (word[0] === '*') {
                     return { type: 'any' };
                 } else {
                     return { type: 'literal', word: word };
@@ -44,11 +46,11 @@ module.exports = function() {
             function _try(handler) {
                 var p = handler.pattern;
                 var m = [];
-                
+
                 if (p.length !== words.length) {
                     return false;
                 }
-                
+
                 for (var i = 0; i < p.length; ++i) {
                     var w = p[i];
                     var r = reduceWord(words[i]);
@@ -70,6 +72,7 @@ module.exports = function() {
                 }
 
                 handler.handler(m, actor, game);
+                return true;
             }
 
             words = command.toLowerCase().trim().split(/\s+/);

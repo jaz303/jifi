@@ -23,14 +23,24 @@ module.exports = function(ctx) {
         west: ['w'],
         northwest: ['nw'],
         up: ['u'],
-        down: ['down']
+        down: ['d']
     });
 
-    // ctx.rewrite('go <direction:motion>', '$direction');
+    ctx.handler('look', {
+        handler: function(command, actor, game) {
+            game.describe(actor.room);
+        }
+    });
 
     ctx.handler(':motion', {
         handler: function(command, actor, game) {
-            console.log(arguments);
+            var dest = actor.room.exits[command[0]];
+            if (dest) {
+                actor.room = game.map.find(dest);
+                game.describe(actor.room);
+            } else {
+                game.say("There is no exit in that direction");
+            }
         }
     });
 
