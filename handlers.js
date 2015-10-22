@@ -1,29 +1,29 @@
 module.exports = function(ctx) {
 
     ctx.motion([
-        'north',
-        'northeast',
-        'east',
-        'southeast',
-        'south',
-        'southwest',
-        'west',
-        'northwest',
-        'up',
-        'down'
+        'n',
+        'ne',
+        'e',
+        'se',
+        's',
+        'sw',
+        'w',
+        'nw',
+        'u',
+        'd'
     ]);
 
     ctx.aliases({
-        north: ['n'],
-        northeast: ['ne'],
-        east: ['e'],
-        southeast: ['se'],
-        south: ['s'],
-        southwest: ['sw'],
-        west: ['w'],
-        northwest: ['nw'],
-        up: ['u'],
-        down: ['d']
+        n   : ['north'],
+        ne  : ['northeast'],
+        e   : ['east'],
+        se  : ['southeast'],
+        s   : ['south'],
+        sw  : ['southwest'],
+        w   : ['west'],
+        nw  : ['northwest'],
+        u   : ['up'],
+        d   : ['down']
     });
 
     ctx.handler('look', {
@@ -34,12 +34,11 @@ module.exports = function(ctx) {
 
     ctx.handler(':motion', {
         handler: function(command, actor, game) {
-            var dest = actor.room.exits[command[0]];
-            if (dest) {
-                actor.room = game.map.find(dest);
-                game.describe(actor.room);
-            } else {
+            if (!actor.room.hasExit(command[0])) {
                 game.say("There is no exit in that direction");
+            } else {
+                actor.room = actor.room.exitDestination(command[0]);
+                game.describe(actor.room);
             }
         }
     });
